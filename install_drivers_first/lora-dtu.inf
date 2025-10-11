@@ -1,0 +1,57 @@
+[Strings]
+DriverPackageDisplayName="DFRobot USB Driver"
+ManufacturerName="DFRobot Co.Ltd (www.dfrobot.com)"
+ServiceName="DFRobot RS-232 Emulation Driver"
+loradtu0001.name="DFRobot LoraDTU-0001"
+
+[DefaultInstall]
+CopyINF=lora-dtu.inf
+
+[Version]
+Class=Ports
+ClassGuid={4D36E978-E325-11CE-BFC1-08002BE10318}
+Signature="$Windows NT$"
+Provider=%ManufacturerName%
+DriverPackageDisplayName=%DriverPackageDisplayName%
+CatalogFile=lora-dtu.cat
+DriverVer=11/24/2015,1.2.3.0
+
+[Manufacturer]
+%ManufacturerName%=DeviceList, NTamd64, NTia64
+
+[DestinationDirs]
+FakeModemCopyFileSection=12
+DefaultDestDir=12
+
+[DeviceList]
+%loradtu0001.name%=DriverInstall, USB\VID_3343&PID_1001
+
+[DeviceList.NTamd64]
+%loradtu0001.name%=DriverInstall, USB\VID_3343&PID_1001
+
+
+[DeviceList.NTia64]
+%loradtu0001.name%=DriverInstall, USB\VID_3343&PID_1001
+
+[DriverInstall]
+include=mdmcpq.inf,usb.inf
+CopyFiles = FakeModemCopyFileSection
+AddReg=DriverAddReg
+
+[DriverAddReg]
+HKR,,DevLoader,,*ntkern 
+HKR,,NTMPDriver,,usbser.sys 
+HKR,,EnumPropPages32,,"MsPorts.dll,SerialPortPropPageProvider"
+
+[DriverInstall.Services]
+include=mdmcpq.inf
+AddService=usbser, 0x00000002, DriverService
+
+[DriverService]
+DisplayName=%ServiceName%
+ServiceType=1
+StartType=3
+ErrorControl=1
+ServiceBinary=%12%\usbser.sys
+LoadOrderGroup=Base
+
